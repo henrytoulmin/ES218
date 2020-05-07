@@ -1,11 +1,13 @@
 ---
-title: "Exploratory analysis of Los Angeles meteorological data "
+title: 'Exploratory analysis of Los Angeles meteorological data '
 author: "Henry Toulmin"
 date: "May 2020"
 output:
   html_document:
     code_folding: hide
-    toc: TRUE
+    toc: yes
+  word_document:
+    toc: yes
 ---
 
 ```{r setup, include=FALSE}
