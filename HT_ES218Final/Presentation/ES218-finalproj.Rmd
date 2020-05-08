@@ -1,15 +1,17 @@
 ---
-title: "Exploratory analysis of Los Angeles meteorological data "
+title: 'Exploratory analysis of Los Angeles meteorological data '
 author: "Henry Toulmin"
 date: "May 2020"
 output:
+  word_document:
+    toc: yes
   html_document:
     code_folding: hide
-    toc: TRUE
+    toc: yes
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(message=FALSE, warning=FALSE, echo = FALSE)
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(message=FALSE, warning=FALSE, echo = TRUE)
 library(ggplot2)
 library(dplyr)
 library(lubridate)
@@ -51,7 +53,7 @@ The data analysis yielded that over the 48-year span of data collection, the ave
 ### Average Monthly Temperature
 The trend of average temperature per year, as shown in figure 1a, is described by the equation y = 0.0166x - 16.17, meaning over the 47 year span of the data, the average temperature in Los Angeles has risen 0.7802°C. Figure 1b is a residual dependency plot for the temperature data that shows a relatively flat loess fit, showing the residuals of figure 1a to be distributed relatively evenly across a linear fit, meaning a parametric fit of order 1 is appropriate for this data. Figure 1c is a quantile-quantile plot of the temperature data which shows the distribution of the residuals of figure 1a to be abnormal, as the first and fourth quartile of the data deviate upward and downward respectively, compared to the normal distribution shown by the trendline. This data would need to be transformed through raising the y (avg.temp) variable to the 3rd power if a hypothesis test were to be utilized. Figure 1d is a spread location plot, which shows a flat loess fit, meaning there is very little change in function as a product of location.
 
-```{r Average Temperature per Month, echo=FALSE, fig.align="center"}
+```{r Average Temperature per Month, echo=TRUE, fig.align="center"}
 dat1 <- dat %>%
   group_by(monthyear) %>% 
   summarise(avg.temp = mean(temp),
@@ -67,7 +69,7 @@ ggplot(dat1, aes(x=monthyear, y=avg.temp)) + geom_point() +
 
 ```
 
-```{r, Temp residuals, echo=FALSE, fig.height=2.5, fig.align="center"}
+```{r, Temp residuals, echo=TRUE, fig.height=2.5, fig.align="center"}
 # Check the residual dependance plot
 M1 <- MASS::rlm(avg.temp~monthyear, dat1)
 dat1$res1 <- M1$residuals
@@ -100,14 +102,14 @@ grid.arrange(p1a, p1b, p1c, nrow=1)
 ### Average Monthly Humidity
 The trend of average relative humidity per year is described by the equation y = -0.0653x + 201.7, meaning over the 47-year span of the data, the average relative humidity in Los Angeles has dropped 3.069%. Figure 2b is a residual dependency plot for the humidity data that shows a relatively flat loess fit, showing the residuals of figure 2a to be distributed relatively evenly across a linear fit, meaning a parametric fit of order 1 is appropriate for this data. Figure 2c is a quantile-quantile plot of the humidity data which shows the distribution of the residuals of figure 2a to be abnormal, as the fourth quartile of the data deviates downward with respect to the normal distribution shown by the trendline. This data would need to be transformed through raising the y (avg.rf) variable to the 2nd power if a hypothesis test were to be utilized. Figure 2d is a spread location plot, which shows a relatively flat loess fit, meaning there is very little change in function as a product of location. There appears to be an abnormality in the data from 1980 to 1986, where there are no months with an average humidity of 75% or greater. The data does show many hourly measurements of above 75% within this span, so this abnormality is likely not due to holes in the data. Perhaps there was a natural phenomenon during this period which made the climate of Los Angeles relatively drier than usual.
 
-```{r Average Relative Humidity per Month, echo=FALSE, fig.align="center"}
+```{r Average Relative Humidity per Month, echo=TRUE, fig.align="center"}
 ggplot(dat1, aes(x=monthyear, y=avg.rh)) + geom_point() +
   geom_smooth(method = MASS::rlm, formula = y~x, se=F) +
   ggtitle("Figure 2a") +
   xlab("Year") + ylab("% Humidity")
 ```
 
-```{r, RH residuals, echo=FALSE, fig.height=2.5, fig.align="center"}
+```{r, RH residuals, echo=TRUE, fig.height=2.5, fig.align="center"}
 # Check the residual dependance plot
 M2 <- MASS::rlm(avg.rh~monthyear, dat1)
 dat1$res2 <- M2$residuals
@@ -139,7 +141,7 @@ grid.arrange(p2a, p2b, p2c, nrow=1)
 ### Total Yearly Rainfall
 The trend of total rainfall per year is described by the equation y = -0.08214x^2 + 0.03236x - 3.184, meaning over the 47 year span of the data, the total yearly rainfall in Los Angeles has dropped 179.9mm. Figure 3b is a residual dependency plot for the precipitation data that shows a relatively flat loess fit, showing the residuals of figure 3a to be distributed relatively evenly across a parabolic fit, meaning a parametric fit of order 2 is appropriate for this data. Figure 3c is a quantile-quantile plot of the precipitation data which shows the distribution of the residuals of figure 3a to be abnormal, as the first and first and fourth quartiles of the data both deviate upward with respect to the normal distribution shown by the trendline. This data would need to be transformed through taking using the log of the y (total.rf) variable if a hypothesis test were to be utilized. Figure 3d is a spread location plot, which shows an upward loess fit, meaning as precipitation increases, the location of the residuals increases until around 275 mm, then decreases. However, this fit should become flatter when the rediduals are normalized as stated above. Because the data yielded many months with little to no rainfall, I decided to represent this data per year rather than month, as it gave a clearer picture of the trend of rainfall.
 
-```{r Total Rainfall per Year, echo=FALSE, fig.align="center"}
+```{r Total Rainfall per Year, echo=TRUE, fig.align="center"}
 dat2 <- dat %>%
   group_by(year) %>% 
   summarise(avg.temp = mean(temp),
@@ -152,7 +154,7 @@ ggplot(dat2, aes(x=year, y=total.rf)) + geom_point() +
   xlab("Year") + ylab("Precipitation fall (mm)")
 ```
 
-```{r, RF residuals, echo=FALSE, fig.height=2.5, fig.align="center"}
+```{r, RF residuals, echo=TRUE, fig.height=2.5, fig.align="center"}
 # Check the residual dependance plot
 M3 <- MASS::rlm(total.rf~year + I(year^2), dat2)
 dat2$res3 <- M3$residuals
